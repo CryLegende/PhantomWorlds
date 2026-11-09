@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -65,7 +66,16 @@ public final class WorldFolders {
       return loadedWorld.getWorldFolder();
     }
 
-    return availableWorldFolders().get(worldName);
+    final Map<String, File> folders = availableWorldFolders();
+    final File exact = folders.get(worldName);
+
+    if(exact != null) {
+      return exact;
+    }
+
+    // Paper 26.x stores world folders in lowercase (dimensions/minecraft/christmas),
+    // while the name saved in data.yml keeps its original case (Christmas).
+    return folders.get(worldName.toLowerCase(Locale.ROOT));
   }
 
   /**
